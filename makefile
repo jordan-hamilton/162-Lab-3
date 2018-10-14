@@ -6,9 +6,9 @@ CXXFLAGS += -Wall
 CXXFLAGS += -pedantic-errors
 CXXFLAGS += -g
 
-OBJS = main.o Die.o Game.o LoadedDie.o
-SRCS = main.cpp Die.cpp Game.cpp LoadedDie.cpp
-HEADERS = Die.hpp Game.hpp LoadedDie.hpp
+OBJS = main.o Die.o Game.o LoadedDie.o Menu.o
+SRCS = main.cpp Die.cpp Game.cpp LoadedDie.cpp Menu.cpp
+HEADERS = Die.hpp Game.hpp LoadedDie.hpp Menu.hpp
 
 lab3: $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o lab3

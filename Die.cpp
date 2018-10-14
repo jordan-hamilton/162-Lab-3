@@ -9,10 +9,16 @@ Die::Die(int numOfSides) {
   this->sides = numOfSides;
 }
 
-int Die::rollOne() {
+int Die::getSides() {
+  return this->sides;
+}
+
+void Die::setSides(int numOfSides) {
+  this->sides = numOfSides;
+}
+
+int Die::rollDie() {
   int roll;
-  unsigned seed = time(0);
-  srand(seed);
   roll = rand() % this->sides + 1;
   return roll;
 }

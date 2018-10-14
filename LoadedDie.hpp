@@ -6,6 +6,7 @@
 #define LOADEDDIE_HPP
 
 #include "Die.hpp"
+#include <iostream>
 
 class LoadedDie : public Die {
 
@@ -13,8 +14,8 @@ private:
 
 
 public:
-  //LoadedDie() : Die();
-  //LoadedDie(int numOfSides) : Die(numOfSides);
+  LoadedDie() : Die() {};
+  LoadedDie(int numOfSides) : Die(numOfSides) {};
 
 };
 

@@ -5,31 +5,29 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <iostream>
-#include <string>
-#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <memory>
 
 #include "Die.hpp"
 #include "LoadedDie.hpp"
-
-enum Menu { game, sides };
+#include "Menu.hpp"
 
 class Game {
 
   private:
-    std::vector<std::string> gameOptions, sidesOptions;
-    int playerOneScore, playerTwoScore;
+    int playerOneScore, playerTwoScore, playerOneSides, playerTwoSides, rounds;
+    std::unique_ptr<Die> playerOneDie, playerTwoDie;
+    Menu gameMenu, sidesMenu, dieMenu;
 
-    void displayMenu(Menu menuList);
-    void addMenuItem(Menu menuList, std::string menuItem);
-    int getMenuChoices(Menu menuList);
-    int getIntChoiceFromPrompt(const std::string &prompt, const int &minVal, const int &maxVal);
-    bool validateInput(const std::string &inputStr);
-    bool validateRange(const int &inputVal, const int &minVal, const int &maxVal);
+    void configureGame();
+    void convertSides(int* sideChoice);
+    void populateMenus();
 
   public:
     Game();
     void play();
+
 };
 
 #endif

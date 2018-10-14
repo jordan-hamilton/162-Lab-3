@@ -1,137 +1,93 @@
-#include "Game.hpp"
-
-using std::cin;
+#include <iostream>
 using std::cout;
 using std::endl;
-using std::string;
+
+#include "Game.hpp"
+
+using std::unique_ptr;
 
 Game::Game() {
-  addMenuItem(game, "Play game");
-  addMenuItem(game, "Exit game");
-  addMenuItem(sides, "Tetrahedron (4 sides)");
-  addMenuItem(sides, "Cube (6 sides)");
-  addMenuItem(sides, "Pentagonal trapezohedron (10 sides)");
-  addMenuItem(sides, "Dodecahedron (12 sides)");
-  addMenuItem(sides, "Icosahedron (20 sides)");
-
+  populateMenus();
 }
 
 void Game::play() {
-  displayMenu(game);
-  if (getIntChoiceFromPrompt("Select an available menu option.", 1 , 2) != 2) {
-    displayMenu(sides);
-  }
-}
+  unsigned seed = time(0);
+  srand(seed);
 
-/***********************************************************************************************
-** Description: Prints a list of options that the user can be prompted to select to the screen.
-** Used before the getIntChoiceFromPrompt function so input can be retrieved.
-***********************************************************************************************/
-void Game::displayMenu(Menu menuList) {
-  switch (menuList) {
+  playerOneDie = nullptr;
+  playerTwoDie = nullptr;
 
-    case game:
+  if (gameMenu.getIntChoiceFromPrompt("Select an available menu option.", 1 , 2, true) != 2) {
+    //How many rounds will be played
+    rounds = gameMenu.getIntChoiceFromPrompt("How many rounds would you like to play?", 1, 1000, false);
 
-      for (int i = 0; i < gameOptions.size(); i++) {
-        cout << i + 1 << ") " << gameOptions.at(i) << endl;
-      }
+    //The number of sides for dice of both players
+    playerOneSides = sidesMenu.getIntChoiceFromPrompt("Player 1: How many sides should your die have?", 1, sidesMenu.getMenuChoices(), true);
+    convertSides(&playerOneSides);
 
-      break;
+    playerTwoSides = sidesMenu.getIntChoiceFromPrompt("Player 2: How many sides should your die have?", 1, sidesMenu.getMenuChoices(), true);
+    convertSides(&playerTwoSides);
 
-    case sides:
+    if (dieMenu.getIntChoiceFromPrompt("Player 1: Which type of die would you like?", 1, dieMenu.getMenuChoices(), true) == 1) {
+      playerOneDie = unique_ptr<Die>(new Die(playerOneSides));
+    } else {
+      playerOneDie = unique_ptr<LoadedDie>(new LoadedDie(playerOneSides));
+    }
 
-      for (int i = 0; i < sidesOptions.size(); i++) {
-        cout << i + 1 << ") " << sidesOptions.at(i) << endl;
-      }
-
-      break;
+    if (dieMenu.getIntChoiceFromPrompt("Player 2: Which type of die would you like?", 1, dieMenu.getMenuChoices(), true) == 1) {
+      playerTwoDie = unique_ptr<Die>(new Die(playerTwoSides));
+    } else {
+      playerTwoDie = unique_ptr<LoadedDie>(new LoadedDie(playerTwoSides));
     }
   }
 
+  cout << "Player one sides: " << playerOneDie->getSides() << endl;
+  cout << "Player two sides: " << playerTwoDie->getSides() << endl;
 
-void Game::addMenuItem(Menu menuList, string menuItem) {
-  switch (menuList) {
-    case game:
-      gameOptions.push_back(menuItem);
-      break;
-
-    case sides:
-      sidesOptions.push_back(menuItem);
-      break;
-  }
-
-}
-
-
-int Game::getMenuChoices(Menu menuList) {
-  switch (menuList) {
-    case game: {
-      return gameOptions.size();
-    }
-
-    case sides: {
-      return sidesOptions.size();
-    }
-  }
 }
 
 
 /***********************************************************************************************
-** Description: Takes a reference to a string used to indicate a prompt for the user to enter
-** data, followed by references to integers that output valid values to hint that the user
-** should enter an integer value within the entered values. Input is passed to validateInput and
-** validateRange to verify that the input is an integer and falls within a valid range for the
-** prompt, then the integer value the user entered is returned if it was valid. Otherwise, the
-** prompt is repeated.
+** Description: Takes a pointer to an integer corresponding to the menu selection for the
+** desired number of sides on a die, then sets the value to the actual number of sides for that
+** choice.
 ***********************************************************************************************/
-int Game::getIntChoiceFromPrompt(const string &prompt, const int &minVal, const int &maxVal) {
-
-  string userInput;
-
-  do {
-    cout << prompt << endl;
-    cout << "Valid input range: [" << minVal << " - " << maxVal << "]: ";
-    getline(cin, userInput);
-  } while(!validateInput(userInput) || !validateRange(stoi(userInput), minVal, maxVal));
-
-return stoi(userInput);
-
-}
-
-
-/*********************************************************************
-** Description: This function accepts a reference to a string, which
-** is then looped through to search for non-digit characters. The
-** return value is true is there are only digits in the string passed
-** to the function, otherwise, the function returns false.
-*********************************************************************/
-bool Game::validateInput(const string &inputStr) {
-  bool isValid = true;
-
-  if (inputStr.empty()) {
-    isValid = false;
-  }
-
-  for (int i = 0; i < inputStr.length(); i++) {
-    if (!isdigit(inputStr[i])) {
-      isValid = false;
+void Game::convertSides(int* sideChoice) {
+  if (*sideChoice) {
+    switch(*sideChoice) {
+      case 1:
+        *sideChoice = 4;
+        break;
+      case 2:
+        *sideChoice = 6;
+        break;
+      case 3:
+        *sideChoice = 8;
+        break;
+      case 4:
+        *sideChoice = 10;
+        break;
+      case 5:
+        *sideChoice = 12;
+        break;
+      case 6:
+        *sideChoice = 20;
+        break;
     }
   }
 
-  return isValid;
 }
 
 
-/***********************************************************************************************
-** Description: Takes a reference to an integer value to check, and minimum and maximum values.
-** If the input is an integer and in the valid range, the function returns true. Otherwise,
-** it returns false.
-***********************************************************************************************/
-bool Game::validateRange(const int &inputVal, const int &minVal, const int &maxVal) {
-
-  if ((inputVal >= minVal) && (inputVal <= maxVal)) {
-    return true;
-  } else {
-    return false;
-  }
+void Game::populateMenus() {
+  gameMenu.addMenuItem("Play game");
+  gameMenu.addMenuItem("Exit game");
+  sidesMenu.addMenuItem("Tetrahedron (4 sides)");
+  sidesMenu.addMenuItem("Cube (6 sides)");
+  sidesMenu.addMenuItem("Octahedron (8 sides)");
+  sidesMenu.addMenuItem("Pentagonal trapezohedron (10 sides)");
+  sidesMenu.addMenuItem("Dodecahedron (12 sides)");
+  sidesMenu.addMenuItem("Icosahedron (20 sides)");
+  dieMenu.addMenuItem("Standard");
+  dieMenu.addMenuItem("Loaded");
 }

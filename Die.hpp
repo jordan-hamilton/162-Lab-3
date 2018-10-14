@@ -5,18 +5,19 @@
 #ifndef DIE_HPP
 #define DIE_HPP
 
-#include <cstdlib>
-#include <ctime>
-
 class Die {
 
   private:
+
+  protected:
     int sides;
 
   public:
     Die();
     Die(int numOfSides);
-    int rollOne();
+    void setSides(int numOfSides);
+    int getSides();
+    int rollDie();
 
 };
 

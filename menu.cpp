@@ -1,4 +1,4 @@
-#include "menu.hpp"
+#include "Menu.hpp"
 
 using std::cin;
 using std::cout;
@@ -10,9 +10,15 @@ using std::string;
 ** Description: Prints a list of options that the user can be prompted to select to the screen.
 ** Used before the getIntChoiceFromPrompt function so input can be retrieved.
 ***********************************************************************************************/
-void displayMenu() {
-  cout << "1) Play game" << endl;
-  cout << "2) Exit game" << endl;
+void Menu::displayMenu() {
+  for (int i = 0; i < options.size(); i++) {
+    cout << i + 1 << ") " << options.at(i) << endl;
+  }
+}
+
+
+void Menu::addMenuItem(string menuItem) {
+  options.push_back(menuItem);
 }
 
 
@@ -24,12 +30,15 @@ void displayMenu() {
 ** prompt, then the integer value the user entered is returned if it was valid. Otherwise, the
 ** prompt is repeated.
 ***********************************************************************************************/
-int getIntChoiceFromPrompt(const string &prompt, const int &minVal, const int &maxVal) {
+int Menu::getIntChoiceFromPrompt(const string &prompt, const int &minVal, const int &maxVal, bool displayTheMenu) {
 
   string userInput;
 
   do {
     cout << prompt << endl;
+    if (displayTheMenu) {
+      displayMenu();
+    }
     cout << "Valid input range: [" << minVal << " - " << maxVal << "]: ";
     getline(cin, userInput);
   } while(!validateInput(userInput) || !validateRange(stoi(userInput), minVal, maxVal));
@@ -39,13 +48,18 @@ return stoi(userInput);
 }
 
 
+int Menu::getMenuChoices() {
+      return options.size();
+}
+
+
 /*********************************************************************
 ** Description: This function accepts a reference to a string, which
 ** is then looped through to search for non-digit characters. The
 ** return value is true is there are only digits in the string passed
 ** to the function, otherwise, the function returns false.
 *********************************************************************/
-bool validateInput(const string &inputStr) {
+bool Menu::validateInput(const string &inputStr) {
   bool isValid = true;
 
   if (inputStr.empty()) {
@@ -67,7 +81,7 @@ bool validateInput(const string &inputStr) {
 ** If the input is an integer and in the valid range, the function returns true. Otherwise,
 ** it returns false.
 ***********************************************************************************************/
-bool validateRange(const int &inputVal, const int &minVal, const int &maxVal) {
+bool Menu::validateRange(const int &inputVal, const int &minVal, const int &maxVal) {
 
   if ((inputVal >= minVal) && (inputVal <= maxVal)) {
     return true;
