@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 #include <memory>
 
 #include "Die.hpp"
@@ -22,7 +23,15 @@ class Game {
 
     void configureGame();
     void convertSides(int* sideChoice);
-    void populateMenus();
+    void displayFinalScore();
+    void displayStats();
+    void initMenus();
+    int getRounds();
+    int getPlayerOneScore();
+    int getPlayerTwoScore();
+    void setPlayerOneScore(int score);
+    void setPlayerTwoScore(int score);
+    void setRounds(int numOfRounds);
 
   public:
     Game();

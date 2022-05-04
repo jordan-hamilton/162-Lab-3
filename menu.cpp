@@ -7,17 +7,17 @@ using std::string;
 
 
 /***********************************************************************************************
-** Description: Prints a list of options that the user can be prompted to select to the screen.
-** Used before the getIntChoiceFromPrompt function so input can be retrieved.
+** Description: Prints a list of all options in the options vector for the user to select an
+** option from the menu.
 ***********************************************************************************************/
 void Menu::displayMenu() {
-  for (int i = 0; i < options.size(); i++) {
+  for (unsigned int i = 0; i < options.size(); i++) {
     cout << i + 1 << ") " << options.at(i) << endl;
   }
 }
 
 
-void Menu::addMenuItem(string menuItem) {
+void Menu::addMenuItem(const string &menuItem); {
   options.push_back(menuItem);
 }
 
@@ -28,7 +28,8 @@ void Menu::addMenuItem(string menuItem) {
 ** should enter an integer value within the entered values. Input is passed to validateInput and
 ** validateRange to verify that the input is an integer and falls within a valid range for the
 ** prompt, then the integer value the user entered is returned if it was valid. Otherwise, the
-** prompt is repeated.
+** prompt is repeated. A boolean is passed to specify whether the entire menu should be
+** displayed along with the prompt for a selection.
 ***********************************************************************************************/
 int Menu::getIntChoiceFromPrompt(const string &prompt, const int &minVal, const int &maxVal, bool displayTheMenu) {
 
@@ -48,6 +49,11 @@ return stoi(userInput);
 }
 
 
+/*********************************************************************
+** Description: Returns the size of the options vector.
+** Used with the getIntChoiceFromPrompt function to determine the
+** maximum valid selection for a menu item.
+*********************************************************************/
 int Menu::getMenuChoices() {
       return options.size();
 }
@@ -66,7 +72,7 @@ bool Menu::validateInput(const string &inputStr) {
     isValid = false;
   }
 
-  for (int i = 0; i < inputStr.length(); i++) {
+  for (unsigned int i = 0; i < inputStr.length(); i++) {
     if (!isdigit(inputStr[i])) {
       isValid = false;
     }

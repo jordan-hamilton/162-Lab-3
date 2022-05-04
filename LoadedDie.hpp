@@ -6,16 +6,15 @@
 #define LOADEDDIE_HPP
 
 #include "Die.hpp"
-#include <iostream>
 
 class LoadedDie : public Die {
 
-private:
+  private:
 
-
-public:
-  LoadedDie() : Die() {};
-  LoadedDie(int numOfSides) : Die(numOfSides) {};
+  public:
+    LoadedDie() {};
+    LoadedDie(int numOfSides, std::string type) : Die(numOfSides, type) {};
+    virtual int rollDie();
 
 };
 

@@ -5,19 +5,24 @@
 #ifndef DIE_HPP
 #define DIE_HPP
 
-class Die {
+#include <cstdlib>
+#include <string>
 
-  private:
+class Die {
 
   protected:
     int sides;
+    std::string dieType;
 
   public:
     Die();
-    Die(int numOfSides);
+    Die(int numOfSides, std::string type);
+    virtual ~Die() {};
     void setSides(int numOfSides);
     int getSides();
-    int rollDie();
+    void setType(std::string type);
+    std::string getType();
+    virtual int rollDie();
 
 };
 
